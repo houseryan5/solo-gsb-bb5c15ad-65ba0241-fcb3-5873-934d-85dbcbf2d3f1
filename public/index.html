@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>剧场排练走位工具</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎭</text></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>🎭 剧场排练走位工具</h1>
+    <div class="topbar-actions">
+      <button id="exportBtn" class="btn btn-ghost" type="button">导出 JSON</button>
+      <button id="importBtn" class="btn btn-ghost" type="button">导入 JSON</button>
+      <input id="importFile" type="file" accept="application/json,.json" hidden />
+      <button id="resetBtn" class="btn btn-ghost danger" type="button">重置为示例</button>
+      <span id="saveState" class="save-state" aria-live="polite"></span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- 左：舞台与节拍控制 -->
+    <section class="stage-panel">
+      <div class="stage-frame">
+        <div class="stage-label stage-label-top">后 台（Upstage）</div>
+        <div class="stage-body">
+          <div id="stage" class="stage" role="grid" aria-label="8 乘 6 舞台网格"></div>
+        </div>
+        <div class="stage-label stage-label-bottom">舞 台 前 沿（Downstage · 面向观众）</div>
+      </div>
+
+      <div class="beat-controls">
+        <button id="firstBtn" class="btn" type="button" title="回到起点（第 0 拍）">⏮</button>
+        <button id="prevBtn" class="btn" type="button" title="上一拍">◀</button>
+        <button id="playBtn" class="btn" type="button" title="自动推演 / 暂停">▶</button>
+        <button id="nextBtn" class="btn" type="button" title="下一拍">▶</button>
+        <button id="lastBtn" class="btn" type="button" title="跳到最后一拍">⏭</button>
+        <input id="beatSlider" type="range" min="0" max="8" value="0" />
+        <span id="beatLabel" class="beat-label">第 0 拍 / 共 8 拍（起点）</span>
+      </div>
+
+      <div id="focusBar" class="focus-bar hidden"></div>
+
+      <div class="beat-edit">
+        <label for="beatsInput">总拍数：</label>
+        <input id="beatsInput" type="number" min="1" max="60" value="8" />
+        <button id="applyBeatsBtn" class="btn btn-small" type="button">应用</button>
+        <span class="hint">第 0 拍为起点；第 N 拍的动作把演员从第 N−1 拍位置移动到第 N 拍。</span>
+      </div>
+    </section>
+
+    <!-- 中：演员列表 -->
+    <aside class="side-panel">
+      <h2>演员</h2>
+      <div class="add-actor">
+        <input id="actorName" type="text" maxlength="12" placeholder="演员名（如：甲）" />
+        <button id="addActorBtn" class="btn btn-small" type="button">＋ 添加</button>
+      </div>
+      <ul id="actorList" class="actor-list"></ul>
+      <p class="hint">点击“设起点”后再点舞台格子；或直接点格子中的演员名字快速选中。</p>
+    </aside>
+
+    <!-- 右：走位表与冲突 -->
+    <section class="timeline-panel">
+      <div class="conflict-section">
+        <h2>冲突检查</h2>
+        <ul id="conflictList" class="conflict-list"></ul>
+      </div>
+
+      <div class="timeline-section">
+        <h2>逐拍走位表</h2>
+        <p class="hint">上 / 下 / 左 / 右 / 原地（—）。越界动作会被拦截，该演员该拍停留原位。</p>
+        <div class="table-wrap">
+          <table id="timelineTable">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden" role="alert"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

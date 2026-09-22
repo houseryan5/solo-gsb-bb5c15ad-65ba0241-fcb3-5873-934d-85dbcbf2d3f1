@@ -1,0 +1,13 @@
+{
+  "name": "stage-blocking-tool",
+  "version": "1.0.0",
+  "description": "剧场排练走位工具：在 8x6 舞台网格上逐拍推演演员走位并检测冲突",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}
